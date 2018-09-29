@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 
 int KEY = 0;
-const int INPUT_LENGTH = 255; 
+const int INPUT_LEN = 255; 
 const int ALPHABET_LEN = 26;
 
 void cleanAndPrint(char*, int);
@@ -11,21 +12,23 @@ void cleanAndPrint(char*, int);
 int main (int count, char* args[])
 {
 
-    char plainText[INPUT_LENGTH];
-    char cipherText[INPUT_LENGTH];
+    char plainText[INPUT_LEN];
+    char *cipherText;
 
-    if ( count < 2 || count > 3)
+    if ( count < 2 || count > 2)
     {
         printf("There is no key");
-        return 1012;
+        return 1;
     }
     
-    KEY = (int)args[1];
+    KEY = atoi(args[1]);
 
     printf("Enter plain text: ");
-    fgets (plainText, INPUT_LENGTH, stdin);
+    fgets (plainText, INPUT_LEN, stdin);
 
     int strLength = strlen(plainText);
+    cipherText = malloc(strLength);
+
     for (int i = 0; i < strLength; i++ ){
 
         if(plainText[i] == '\0' || plainText[i] == '\n'|| plainText[i] == '\r')
@@ -33,30 +36,26 @@ int main (int count, char* args[])
 
         if(isalpha(plainText[i]))
         {
-            int alphabetMaxletter = (((int)plainText[i] + KEY) % ALPHABET_LEN) + 97;
-            
+            int asciiUpperOrLower = 97; // Default lower    
+
             if(isupper(plainText[i]))
-               alphabetMaxletter = alphabetMaxletter - 32;
+                asciiUpperOrLower = 65;
+
+            int alphabetBaseletter = (((int)plainText[i] - asciiUpperOrLower + KEY) % ALPHABET_LEN);
             
-            cipherText[i] = alphabetMaxletter;
+            cipherText[i] = alphabetBaseletter + asciiUpperOrLower;
         }
         else
             cipherText[i] = plainText[i];
     }
 
-    printf("%s\n", cipherText);
-    cleanAndPrint(cipherText, strLength);
+    // Set string terminator.
+    cipherText[strLength - 1] = '\0' ;
+
+    printf("%s", cipherText);
 
     return 0;
 
 }
 
 
-void cleanAndPrint(char* string, int len)
-{
-    int strLength = (int) sizeof(string);
-    for(int i = 0; i < strLength; i++)
-        if(i > len) string[i] = '\0';
-
-    printf("%s", string);
-}

@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Caesar.exe",
             "args": [
-                "8"
+                "1"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
