@@ -7,8 +7,6 @@ int KEY = 0;
 const int INPUT_LEN = 255; 
 const int ALPHABET_LEN = 26;
 
-void cleanAndPrint(char*, int);
-
 int main (int count, char* args[])
 {
 
